@@ -1,0 +1,25 @@
+{
+  "name": "liri",
+  "version": "1.0.0",
+  "description": "liri node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pcheno/liri.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pcheno/liri/issues"
+  },
+  "homepage": "https://github.com/pcheno/liri#readme",
+  "dependencies": {
+    "fs-extra": "^5.0.0",
+    "request": "^2.85.0",
+    "request-promise": "^4.2.2"
+  }
+}
