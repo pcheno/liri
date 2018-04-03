@@ -1,14 +1,21 @@
-//require("dotenv").config();
+require("dotenv").config();
 
 
-//var client = new Twitter(keys.twitter);
+let keys = require("./keys")
+
+//console.log(keys.twitter.consumer_key);
+//console.log(keys.twitter.consumer_secret);
+//console.log(keys.twitter.access_token_key);
+//console.log(keys.twitter.access_token_secret);
+
 
 var request = require("request");
 // Store all of the arguments in an array
 var nodeArgs = process.argv;
 var action = nodeArgs[2].toLowerCase();
 
-function movieThis(action,nodeArgs) {
+
+function movieThis(action, nodeArgs) {
     // Create an empty variable for holding the movie name
     var movieName = "";
     // Add "+" for spaces in movie name
@@ -34,31 +41,64 @@ function movieThis(action,nodeArgs) {
     //* Actors in the movie.
     request(queryUrl, function (error, response, body) {
         // If the request is successful
-
-        var bodyData = JSON.parse(body);
-        if (bodyData.Response == "True") {
-            console.log("Title: " + bodyData.Title);
-            console.log("Release Year: " + bodyData.Year);
-            console.log("Title: " + bodyData.imdbRating);
-            var rottenTomatoes = "";
-            for (var i = 0; i < bodyData.Ratings.length; i++) {
-                if (bodyData.Ratings[i].Source == "Rotten Tomatoes") {
-                    rottenTomatoes = bodyData.Ratings[i].Value;
+        if (!error && response.statusCode === 200) {
+            var bodyData = JSON.parse(body);
+            if (bodyData.Response == "True") {
+                console.log("Title: " + bodyData.Title);
+                console.log("Release Year: " + bodyData.Year);
+                console.log("Title: " + bodyData.imdbRating);
+                var rottenTomatoes = "";
+                for (var i = 0; i < bodyData.Ratings.length; i++) {
+                    if (bodyData.Ratings[i].Source == "Rotten Tomatoes") {
+                        rottenTomatoes = bodyData.Ratings[i].Value;
+                    }
                 }
+                console.log("Rotten Tomatoes: " + rottenTomatoes);
+                console.log("Country: " + bodyData.Country);
+                console.log("Language: " + bodyData.Language);
+                console.log("Plot: " + bodyData.Plot);
+                console.log("Actors: " + bodyData.Actors);
+            } else {
+                console.log('Sorry, movie titled "' + movieName.split(/[+]+/).join(' ') + '" does not exist in the OMDB database.')
             }
-            console.log("Rotten Tomatoes: " + rottenTomatoes);
-            console.log("Country: " + bodyData.Country);
-            console.log("Language: " + bodyData.Language);
-            console.log("Plot: " + bodyData.Plot);
-            console.log("Actors: " + bodyData.Actors);
-        } else {
-            console.log('Sorry, movie titled "' + movieName.split(/[+]+/).join(' ') + '" does not exist in the OMDB database.')
-        }
+        } //if (!error && response.statusCode === 200)
     }); //request(queryUrl, function (error, response, body)
 } //function movieThis
 
 function twitterThis() {
-    console.log("twitterThis");
+
+    var tw = require('twitter');
+
+    var client = new tw({
+        consumer_key: keys.twitter.consumer_key,
+        consumer_secret: keys.twitter.consumer_secret,
+        access_token_key: keys.twitter.access_token_key,
+        access_token_secret: keys.twitter.access_token_secret
+    });
+
+    var params = {
+        name: 'Keys Soze',
+        screen_name: 'KeysSoze',
+        exclude_replies: false,
+        trim_user: true,
+        count: 20
+    };
+    client.get('statuses/user_timeline', params, function (error, tweets, response) {
+        if (!error) {
+            var str = JSON.stringify(tweets, null, 2);
+            console.log(str);
+
+            for (var i = 0; i < tweets.length; i++) {
+                var n = i+1;
+                console.log(n+'---------------------------------------------');
+                console.log('created:  ' + tweets[i].created_at);
+                console.log('text   :  ' + tweets[i].text);
+                console.log('---------------------------------------------');
+            }
+
+        }
+    });
+
 } //function twitterThis
 
 
@@ -105,8 +145,9 @@ if (action == "do-what-it-says") {
             for (var i = 0; i < nameArray.length; i++) {
                 nodeArgs.push(nameArray[i]);
             }
+
             if (action == "movie-this") {
-                movieThis(action,nodeArgs);
+                movieThis(action, nodeArgs);
             } else if (action == "my-tweets") {
                 twitterThis();
             }
@@ -116,7 +157,7 @@ if (action == "do-what-it-says") {
 
 
 if (action == "movie-this") {
-    movieThis(action,nodeArgs);
+    movieThis(action, nodeArgs);
 } else if (action == "my-tweets") {
     twitterThis();
 }
