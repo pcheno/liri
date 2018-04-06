@@ -86,8 +86,8 @@ function twitterThis() {
     client.get('statuses/user_timeline', params, function (error, tweets, response) {
         if (!error) {
             for (var i = 0; i < tweets.length; i++) {
-                var n = i+1;
-                console.log(n+'---------------------------------------------');
+                var n = i + 1;
+                console.log(n + '---------------------------------------------');
                 console.log('created:  ' + tweets[i].created_at);
                 console.log('text   :  ' + tweets[i].text);
                 console.log('-----------------------------------------------');
@@ -150,11 +150,9 @@ if (action == "do-what-it-says") {
             }
         } //else from err/readFile
     }); // fs.readFile
-} // if (action == "do-what-it-says") 
-
-
-if (action == "movie-this") {
-    movieThis(action, nodeArgs);
-} else if (action == "my-tweets") {
+} else // if (action == "do-what-it-says") 
+    if (action == "movie-this") {
+        movieThis(action, nodeArgs);
+    } else if (action == "my-tweets") {
     twitterThis();
 }
