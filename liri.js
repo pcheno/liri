@@ -1,19 +1,11 @@
 require("dotenv").config();
 
-
 let keys = require("./keys")
-
-//console.log(keys.twitter.consumer_key);
-//console.log(keys.twitter.consumer_secret);
-//console.log(keys.twitter.access_token_key);
-//console.log(keys.twitter.access_token_secret);
-
 
 var request = require("request");
 // Store all of the arguments in an array
 var nodeArgs = process.argv;
 var action = nodeArgs[2].toLowerCase();
-
 
 function movieThis(action, nodeArgs) {
     // Create an empty variable for holding the movie name
@@ -68,14 +60,12 @@ function movieThis(action, nodeArgs) {
 function twitterThis() {
 
     var tw = require('twitter');
-
     var client = new tw({
         consumer_key: keys.twitter.consumer_key,
         consumer_secret: keys.twitter.consumer_secret,
         access_token_key: keys.twitter.access_token_key,
         access_token_secret: keys.twitter.access_token_secret
     });
-
     var params = {
         name: 'Keys Soze',
         screen_name: 'KeysSoze',
@@ -92,20 +82,12 @@ function twitterThis() {
                 console.log('text   :  ' + tweets[i].text);
                 console.log('-----------------------------------------------');
             }
-
         }
     });
 
 } //function twitterThis
 
-
 if (action == "do-what-it-says") {
-    //open random.txt file
-    //read in action
-    //read in possible movie name
-    //if movie-this, then create nodeArgs, keep in mind the structure [0=1,1=2,2=action, 3....movie words]
-    //remember to toLowerCase(); the action
-
     // Includes the FS package for reading and writing packages
     var fs = require("fs");
     // Running the readFile module that's inside of fs.
@@ -136,7 +118,6 @@ if (action == "do-what-it-says") {
                 }
                 // Print each element (item) of the array/
             } // for (var i = 0; i < output.length; i++)
-
             // now put movie name in nodeArgs as if user entered
             var nameArray = tempName.split(" ");
             for (var i = 0; i < nameArray.length; i++) {
@@ -156,3 +137,4 @@ if (action == "do-what-it-says") {
     } else if (action == "my-tweets") {
     twitterThis();
 }
+//Paul Chenoweth week 11 node.js 04/06/2018
